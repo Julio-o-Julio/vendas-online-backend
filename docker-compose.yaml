@@ -1,16 +1,6 @@
 version: '3.8'
 
 services:
-  nestjs-10:
-    container_name: nestjs-10-dev
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '${NEST_EXTERNAL_PORT}:${NEST_INTERNAL_PORT}'
-    env_file:
-      - ./.env
-
   postgres:
     container_name: postgres-dev
     image: postgres:16
