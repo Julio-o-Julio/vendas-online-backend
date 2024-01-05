@@ -8,10 +8,11 @@ datasource db {
 }
 
 model User {
-  id       Int    @id
+  id       String  @id
   name     String
-  email    String @unique
-  phone    String
-  cpf      String @unique
+  email    String  @unique
+  userType String  @default("client")
+  phone    String?
+  cpf      String  @unique
   password String
 }

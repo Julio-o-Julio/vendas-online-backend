@@ -2,40 +2,50 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
+import { UserNotFoundError } from 'src/errors/user-not-found.error';
 
 @Injectable()
 export class UserService {
-  private users: User[] = [];
+  constructor(private prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const saltOrRounds = 10;
     const passwordHashed = await hash(createUserDto.password, saltOrRounds);
 
     const user: User = {
-      id: this.users.length + 1,
+      id: uuidv4(),
       ...createUserDto,
       password: passwordHashed,
     };
 
-    this.users.push(user);
-
-    return user;
+    return this.prismaService.user.create({
+      data: user,
+    });
   }
 
   async findAll(): Promise<User[]> {
-    return this.users;
+    return this.prismaService.user.findMany();
   }
 
-  async findOne(id: number): Promise<User> {
-    return this.users.filter((user) => user.id === id)[0];
+  async findOne(id: string): Promise<User> {
+    return this.prismaService.user.findUniqueOrThrow({ where: { id } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    return await this.prismaService.user.update({
+      where: { id },
+      data: updateUserDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<void> {
+    try {
+      await this.prismaService.user.delete({ where: { id } });
+    } catch (error) {
+      throw new UserNotFoundError('User Not Found');
+    }
   }
 }
