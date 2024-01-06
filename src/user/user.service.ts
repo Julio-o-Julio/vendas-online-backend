@@ -31,14 +31,22 @@ export class UserService {
   }
 
   async findOne(id: string): Promise<User> {
-    return await this.prismaService.user.findUniqueOrThrow({ where: { id } });
+    try {
+      return await this.prismaService.user.findUniqueOrThrow({ where: { id } });
+    } catch (error) {
+      throw new UserNotFoundError('User Not Found');
+    }
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    return await this.prismaService.user.update({
-      where: { id },
-      data: updateUserDto,
-    });
+    try {
+      return await this.prismaService.user.update({
+        where: { id },
+        data: updateUserDto,
+      });
+    } catch (error) {
+      throw new UserNotFoundError('User Not Found');
+    }
   }
 
   async remove(id: string): Promise<void> {

@@ -8,8 +8,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalFilters(
-    new UserNotFoundErrorExceptionFilter(),
     new PrismaExceptionFilter(),
+    new UserNotFoundErrorExceptionFilter(),
   );
   app.useGlobalPipes(new ValidationPipe({ errorHttpStatusCode: 422 }));
 

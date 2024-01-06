@@ -7,16 +7,28 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     const context = host.switchToHttp();
     const response = context.getResponse();
 
-    if (exception.code === 'P2025') {
-      return response.status(404).json({
-        statusCode: 404,
-        message: exception.message,
-      });
+    switch (exception.code) {
+      case 'P2002':
+        if (exception.message.includes('email')) {
+          return response.status(409).json({
+            statusCode: 409,
+            message: 'User with this email already exists',
+          });
+        }
+        if (exception.message.includes('cpf')) {
+          return response.status(409).json({
+            statusCode: 409,
+            message: 'User with this cpf already exists',
+          });
+        }
+
+      default:
+        break;
     }
 
     return response.status(500).json({
       statusCode: 500,
-      message: 'Internal server error',
+      message: 'Internal Server Error',
     });
   }
 }
