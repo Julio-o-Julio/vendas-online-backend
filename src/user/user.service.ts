@@ -21,17 +21,17 @@ export class UserService {
       password: passwordHashed,
     };
 
-    return this.prismaService.user.create({
+    return await this.prismaService.user.create({
       data: user,
     });
   }
 
   async findAll(): Promise<User[]> {
-    return this.prismaService.user.findMany();
+    return await this.prismaService.user.findMany();
   }
 
   async findOne(id: string): Promise<User> {
-    return this.prismaService.user.findUniqueOrThrow({ where: { id } });
+    return await this.prismaService.user.findUniqueOrThrow({ where: { id } });
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
