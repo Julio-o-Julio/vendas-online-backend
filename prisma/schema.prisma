@@ -15,7 +15,25 @@ model User {
   phone     String?   @db.Char(14)
   cpf       String    @unique @db.Char(11)
   password  String
+  address   Address[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
 
+model Address {
+  id             Int      @default(autoincrement())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  cep            String   @db.Char(8)
+  state          String   @db.VarChar(20)
+  city           String   @db.VarChar(30)
+  neighborhood   String   @db.VarChar(80)
+  street         String   @db.VarChar(80)
+  number         Int      @db.Integer
+  complement     String?  @db.VarChar(255)
+  referencePoint String?   @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@id([userId, id])
+}
