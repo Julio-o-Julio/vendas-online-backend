@@ -27,7 +27,7 @@ export class User {
   @IsOptional()
   userType?: string;
 
-  @Length(13, 13)
+  @Length(14, 14)
   @IsString()
   @IsOptional()
   phone?: string;
