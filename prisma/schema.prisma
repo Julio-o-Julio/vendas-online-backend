@@ -12,7 +12,7 @@ model User {
   name      String    @db.VarChar(255)
   email     String    @unique @db.VarChar(255)
   userType  String    @default("client") @db.VarChar(255)
-  phone     String?   @db.Char(14)
+  phone     String?   @db.Char(14) // Fazer uma tabela própria para o numero de telefone 
   cpf       String    @unique @db.Char(11)
   password  String
   address   Address[]
@@ -31,7 +31,7 @@ model Address {
   street         String   @db.VarChar(80)
   number         Int      @db.Integer
   complement     String?  @db.VarChar(255)
-  referencePoint String?   @db.VarChar(255)
+  referencePoint String?  @db.VarChar(255)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
