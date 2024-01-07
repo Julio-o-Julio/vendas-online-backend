@@ -9,16 +9,16 @@ export class PrismaExceptionFilter implements ExceptionFilter {
 
     switch (exception.code) {
       case 'P2002':
-        if (exception.message.includes('email')) {
-          return response.status(409).json({
-            statusCode: 409,
-            message: 'User with this email already exists',
-          });
-        }
         if (exception.message.includes('cpf')) {
           return response.status(409).json({
             statusCode: 409,
             message: 'User with this cpf already exists',
+          });
+        }
+        if (exception.message.includes('email')) {
+          return response.status(409).json({
+            statusCode: 409,
+            message: 'User with this email already exists',
           });
         }
 
