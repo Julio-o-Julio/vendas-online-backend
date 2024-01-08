@@ -7,7 +7,6 @@ import { CachedService } from './cached.service';
     CacheModule.register({
       ttl: 1000 * 60 * 2, // sec milisec min (fica em cache durante 2 min)
       max: 10, // máximo de itens em cache
-      isGlobal: true,
     }),
   ],
   controllers: [],
