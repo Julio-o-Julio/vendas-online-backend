@@ -6,10 +6,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { UserNotFoundError } from 'src/errors/user-not-found.error';
+import { CachedService } from 'src/cached/cached.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly cachedService: CachedService,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const saltOrRounds = 10;
@@ -32,7 +36,9 @@ export class UserService {
 
   async findOne(id: string): Promise<User> {
     try {
-      return await this.prismaService.user.findUniqueOrThrow({ where: { id } });
+      return await this.cachedService.getCached<User>(id, () =>
+        this.prismaService.user.findUniqueOrThrow({ where: { id } }),
+      );
     } catch (error) {
       throw new UserNotFoundError('User Not Found');
     }
