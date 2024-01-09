@@ -7,5 +7,6 @@ import { CachedModule } from 'src/cached/cached.module';
   imports: [CachedModule],
   controllers: [UserController],
   providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}

@@ -3,15 +3,21 @@ import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ReturnAddress } from './dto/return-address.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AddressService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly userService: UserService,
+  ) {}
 
   async create(
     createAddressDto: CreateAddressDto,
     userId: string,
   ): Promise<ReturnAddress> {
+    await this.userService.findOne(userId);
+
     return await this.prismaService.address.create({
       data: { userId, ...createAddressDto },
     });
