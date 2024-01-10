@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { Address } from './entities/address.entity';
 import { CachedService } from 'src/cached/cached.service';
+import { NotFoundError } from 'src/errors/not-found.error';
 
 @Injectable()
 export class AddressService {
@@ -38,14 +39,18 @@ export class AddressService {
   async findOne(id: number, userId: string): Promise<Address> {
     await this.userService.findOne(userId);
 
-    return await this.prismaService.address.findUniqueOrThrow({
-      where: {
-        userId_id: {
-          userId,
-          id,
+    try {
+      return await this.prismaService.address.findUniqueOrThrow({
+        where: {
+          userId_id: {
+            userId,
+            id,
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      throw new NotFoundError('Address Not Found');
+    }
   }
 
   async update(
@@ -55,33 +60,41 @@ export class AddressService {
   ): Promise<Address> {
     await this.userService.findOne(userId);
 
-    const addressUpdated = await this.prismaService.address.update({
-      where: {
-        userId_id: {
-          userId,
-          id,
+    try {
+      const addressUpdated = await this.prismaService.address.update({
+        where: {
+          userId_id: {
+            userId,
+            id,
+          },
         },
-      },
-      data: updateAddressDto,
-    });
+        data: updateAddressDto,
+      });
 
-    await this.cachedService.clearCached(userId);
+      await this.cachedService.clearCached(userId);
 
-    return addressUpdated;
+      return addressUpdated;
+    } catch (error) {
+      throw new NotFoundError('Address Not Found');
+    }
   }
 
   async remove(id: number, userId: string): Promise<void> {
     await this.userService.findOne(userId);
 
-    await this.prismaService.address.delete({
-      where: {
-        userId_id: {
-          userId,
-          id,
+    try {
+      await this.prismaService.address.delete({
+        where: {
+          userId_id: {
+            userId,
+            id,
+          },
         },
-      },
-    });
+      });
 
-    await this.cachedService.clearCached(userId);
+      await this.cachedService.clearCached(userId);
+    } catch (error) {
+      throw new NotFoundError('Address Not Found');
+    }
   }
 }
