@@ -10,23 +10,26 @@ import {
 import { AddressService } from './address.service';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
-import { ReturnAddress } from './dto/return-address.dto';
+import { ReturnAddressDto } from './dto/return-address.dto';
+import { Address } from './entities/address.entity';
 
 @Controller('address')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}
 
   @Post('/:userId')
-  create(
+  async create(
     @Body() createAddressDto: CreateAddressDto,
     @Param('userId') userId: string,
-  ): Promise<ReturnAddress> {
-    return this.addressService.create(createAddressDto, userId);
+  ): Promise<ReturnAddressDto> {
+    const address = await this.addressService.create(createAddressDto, userId);
+    return new ReturnAddressDto(address);
   }
 
-  @Get()
-  findAll() {
-    return this.addressService.findAll();
+  @Get('/:userId')
+  async findAll(@Param('userId') userId: string): Promise<ReturnAddressDto[]> {
+    const addresses = await this.addressService.findAll(userId);
+    return addresses.map((address: Address) => new ReturnAddressDto(address));
   }
 
   @Get(':id')

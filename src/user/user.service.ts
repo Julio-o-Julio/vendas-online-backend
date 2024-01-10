@@ -26,7 +26,8 @@ export class UserService {
     };
 
     return await this.prismaService.user.create({
-      data: user,
+      data: { ...user, address: undefined },
+      include: { address: true },
     });
   }
 
@@ -37,7 +38,10 @@ export class UserService {
   async findOne(id: string): Promise<User> {
     try {
       return await this.cachedService.getCached<User>(id, () =>
-        this.prismaService.user.findUniqueOrThrow({ where: { id } }),
+        this.prismaService.user.findUniqueOrThrow({
+          where: { id },
+          include: { address: true },
+        }),
       );
     } catch (error) {
       throw new UserNotFoundError('User Not Found');

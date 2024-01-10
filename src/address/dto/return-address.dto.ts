@@ -1,6 +1,6 @@
-export class ReturnAddress {
-  id: number;
-  userId: string;
+import { Address } from '../entities/address.entity';
+
+export class ReturnAddressDto {
   cep: string;
   state: string;
   city: string;
@@ -9,6 +9,15 @@ export class ReturnAddress {
   number: number;
   complement?: string;
   referencePoint?: string;
-  createdAt: Date;
-  updatedAt: Date;
+
+  constructor(address: Address) {
+    this.cep = address.cep;
+    this.state = address.state;
+    this.city = address.city;
+    this.neighborhood = address.neighborhood;
+    this.street = address.street;
+    this.number = address.number;
+    this.complement = address.complement;
+    this.referencePoint = address.referencePoint;
+  }
 }

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ReturnAddress } from './dto/return-address.dto';
 import { UserService } from 'src/user/user.service';
+import { Address } from './entities/address.entity';
 
 @Injectable()
 export class AddressService {
@@ -15,7 +15,7 @@ export class AddressService {
   async create(
     createAddressDto: CreateAddressDto,
     userId: string,
-  ): Promise<ReturnAddress> {
+  ): Promise<Address> {
     await this.userService.findOne(userId);
 
     return await this.prismaService.address.create({
@@ -23,8 +23,8 @@ export class AddressService {
     });
   }
 
-  findAll() {
-    return `This action returns all address`;
+  async findAll(userId: string): Promise<Address[]> {
+    return await this.prismaService.address.findMany({ where: { userId } });
   }
 
   findOne(id: number) {

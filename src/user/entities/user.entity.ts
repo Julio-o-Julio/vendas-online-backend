@@ -1,3 +1,5 @@
+import { Address } from 'src/address/entities/address.entity';
+
 export class User {
   id: string;
   name: string;
@@ -6,4 +8,7 @@ export class User {
   phone?: string;
   cpf: string;
   password: string;
+  address?: Address[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }

@@ -1,6 +1,9 @@
+import { User } from 'src/user/entities/user.entity';
+
 export class Address {
   id: number;
   userId: string;
+  user?: User;
   cep: string;
   state: string;
   city: string;
@@ -9,6 +12,6 @@ export class Address {
   number: number;
   complement?: string;
   referencePoint?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

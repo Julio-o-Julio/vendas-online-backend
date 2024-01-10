@@ -8,9 +8,9 @@ import {
 } from 'class-validator';
 
 export class CreateAddressDto {
-  /* @IsString()
+  @IsString()
   @IsNotEmpty()
-  userId: string; */
+  userId: string;
 
   @Length(8, 8)
   @IsString()
