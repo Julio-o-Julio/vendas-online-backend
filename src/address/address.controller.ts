@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { AddressService } from './address.service';
 import { CreateAddressDto } from './dto/create-address.dto';
@@ -32,18 +33,35 @@ export class AddressController {
     return addresses.map((address: Address) => new ReturnAddressDto(address));
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.addressService.findOne(+id);
+  @Get('/:userId/:id')
+  async findOne(
+    @Param('userId') userId: string,
+    @Param('id') id: string,
+  ): Promise<ReturnAddressDto> {
+    const address = await this.addressService.findOne(+id, userId);
+    return new ReturnAddressDto(address);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAddressDto: UpdateAddressDto) {
-    return this.addressService.update(+id, updateAddressDto);
+  @Patch('/:userId/:id')
+  async update(
+    @Param('userId') userId: string,
+    @Param('id') id: string,
+    @Body() updateAddressDto: UpdateAddressDto,
+  ): Promise<ReturnAddressDto> {
+    const address = await this.addressService.update(
+      +id,
+      updateAddressDto,
+      userId,
+    );
+    return new ReturnAddressDto(address);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.addressService.remove(+id);
+  @HttpCode(204) // no content
+  @Delete('/:userId/:id')
+  async remove(
+    @Param('userId') userId: string,
+    @Param('id') id: string,
+  ): Promise<void> {
+    return await this.addressService.remove(+id, userId);
   }
 }

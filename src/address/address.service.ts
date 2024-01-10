@@ -24,18 +24,52 @@ export class AddressService {
   }
 
   async findAll(userId: string): Promise<Address[]> {
+    await this.userService.findOne(userId);
+
     return await this.prismaService.address.findMany({ where: { userId } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} address`;
+  async findOne(id: number, userId: string): Promise<Address> {
+    await this.userService.findOne(userId);
+
+    return await this.prismaService.address.findUniqueOrThrow({
+      where: {
+        userId_id: {
+          userId,
+          id,
+        },
+      },
+    });
   }
 
-  update(id: number, updateAddressDto: UpdateAddressDto) {
-    return `This action updates a #${id} address`;
+  async update(
+    id: number,
+    updateAddressDto: UpdateAddressDto,
+    userId: string,
+  ): Promise<Address> {
+    await this.userService.findOne(userId);
+
+    return await this.prismaService.address.update({
+      where: {
+        userId_id: {
+          userId,
+          id,
+        },
+      },
+      data: updateAddressDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} address`;
+  async remove(id: number, userId: string): Promise<void> {
+    await this.userService.findOne(userId);
+
+    await this.prismaService.address.delete({
+      where: {
+        userId_id: {
+          userId,
+          id,
+        },
+      },
+    });
   }
 }
