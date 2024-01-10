@@ -4,12 +4,14 @@ import { UpdateAddressDto } from './dto/update-address.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { Address } from './entities/address.entity';
+import { CachedService } from 'src/cached/cached.service';
 
 @Injectable()
 export class AddressService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly userService: UserService,
+    private readonly cachedService: CachedService,
   ) {}
 
   async create(
@@ -18,9 +20,13 @@ export class AddressService {
   ): Promise<Address> {
     await this.userService.findOne(userId);
 
-    return await this.prismaService.address.create({
+    const address = await this.prismaService.address.create({
       data: { userId, ...createAddressDto },
     });
+
+    await this.cachedService.clearCached(userId);
+
+    return address;
   }
 
   async findAll(userId: string): Promise<Address[]> {
@@ -49,7 +55,7 @@ export class AddressService {
   ): Promise<Address> {
     await this.userService.findOne(userId);
 
-    return await this.prismaService.address.update({
+    const addressUpdated = await this.prismaService.address.update({
       where: {
         userId_id: {
           userId,
@@ -58,6 +64,10 @@ export class AddressService {
       },
       data: updateAddressDto,
     });
+
+    await this.cachedService.clearCached(userId);
+
+    return addressUpdated;
   }
 
   async remove(id: number, userId: string): Promise<void> {
@@ -71,5 +81,7 @@ export class AddressService {
         },
       },
     });
+
+    await this.cachedService.clearCached(userId);
   }
 }
