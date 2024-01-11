@@ -23,8 +23,9 @@ export class AddressController {
     @Body() createAddressDto: CreateAddressDto,
     @Param('userId') userId: string,
   ): Promise<ReturnAddressDto> {
-    const address = await this.addressService.create(createAddressDto, userId);
-    return new ReturnAddressDto(address);
+    return new ReturnAddressDto(
+      await this.addressService.create(createAddressDto, userId),
+    );
   }
 
   @Get('/:userId')
@@ -38,8 +39,7 @@ export class AddressController {
     @Param('userId') userId: string,
     @Param('id') id: string,
   ): Promise<ReturnAddressDto> {
-    const address = await this.addressService.findOne(+id, userId);
-    return new ReturnAddressDto(address);
+    return new ReturnAddressDto(await this.addressService.findOne(+id, userId));
   }
 
   @Patch('/:userId/:id')
@@ -48,12 +48,9 @@ export class AddressController {
     @Param('id') id: string,
     @Body() updateAddressDto: UpdateAddressDto,
   ): Promise<ReturnAddressDto> {
-    const address = await this.addressService.update(
-      +id,
-      updateAddressDto,
-      userId,
+    return new ReturnAddressDto(
+      await this.addressService.update(+id, updateAddressDto, userId),
     );
-    return new ReturnAddressDto(address);
   }
 
   @HttpCode(204) // no content
