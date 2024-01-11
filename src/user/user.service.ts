@@ -7,6 +7,7 @@ import { hash } from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { NotFoundError } from 'src/errors/not-found.error';
 import { CachedService } from 'src/cached/cached.service';
+import { EmailOrPasswordInvalidError } from 'src/errors/email-or-password-invalid.error';
 
 @Injectable()
 export class UserService {
@@ -48,6 +49,16 @@ export class UserService {
       );
     } catch (error) {
       throw new NotFoundError('User Not Found');
+    }
+  }
+
+  async findOneByEmail(email: string): Promise<User> {
+    try {
+      return await this.prismaService.user.findUniqueOrThrow({
+        where: { email },
+      });
+    } catch (error) {
+      throw new EmailOrPasswordInvalidError('Email Or Password Invalid');
     }
   }
 
