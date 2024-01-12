@@ -32,6 +32,6 @@ export class AuthService {
   }
 
   async signOut() {
-    return `This action returns all auth`;
+    return `This action realize in sign out of system`;
   }
 }

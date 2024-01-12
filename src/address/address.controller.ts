@@ -15,16 +15,17 @@ import { ReturnAddressDto } from './dto/return-address.dto';
 import { Address } from './entities/address.entity';
 import { Roles } from 'src/decorators/roles.decorator';
 import { UserType } from 'src/user/enum/user-type.enum';
+import { UserId } from 'src/decorators/user-id.decorator';
 
 @Roles(UserType.User)
 @Controller('address')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}
 
-  @Post('/:userId')
+  @Post()
   async create(
     @Body() createAddressDto: CreateAddressDto,
-    @Param('userId') userId: string,
+    @UserId() userId: string,
   ): Promise<ReturnAddressDto> {
     return new ReturnAddressDto(
       await this.addressService.create(createAddressDto, userId),
