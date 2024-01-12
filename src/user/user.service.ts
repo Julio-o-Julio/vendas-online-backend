@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { hash } from 'bcrypt';
+import { genSaltSync, hash } from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { NotFoundError } from 'src/errors/not-found.error';
 import { CachedService } from 'src/cached/cached.service';
@@ -17,7 +17,7 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const saltOrRounds = 10;
+    const saltOrRounds = genSaltSync();
     const passwordHashed = await hash(createUserDto.password, saltOrRounds);
 
     const user: User = await this.prismaService.user.create({

@@ -4,12 +4,19 @@ import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/entities/user.entity';
 import { compareSync } from 'bcrypt';
 import { EmailOrPasswordInvalidError } from 'src/errors/email-or-password-invalid.error';
+import { ReturnSignInDto } from './dto/return-sign-in.dto';
+import { JwtService } from '@nestjs/jwt';
+import { ReturnUserDto } from 'src/user/dto/return-user.dto';
+import { PayloadSignInDto } from './dto/payload-sign-in.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  async signIn(signInDto: SignInDto): Promise<User> {
+  async signIn(signInDto: SignInDto): Promise<ReturnSignInDto> {
     const user: User = await this.userService.findOneByEmail(signInDto.email);
 
     const isMatch = compareSync(signInDto.password, user.password);
@@ -18,7 +25,10 @@ export class AuthService {
       throw new EmailOrPasswordInvalidError('User Or Password Invalid');
     }
 
-    return user;
+    return {
+      accessToken: this.jwtService.sign({ ...new PayloadSignInDto(user) }),
+      user: new ReturnUserDto(user),
+    };
   }
 
   findAll() {

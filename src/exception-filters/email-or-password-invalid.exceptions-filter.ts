@@ -9,8 +9,8 @@ export class EmailOrPasswordInvalidErrorExceptionFilter
     const context = host.switchToHttp();
     const response = context.getResponse();
 
-    return response.status(404).json({
-      statusCode: 404,
+    return response.status(401).json({
+      statusCode: 401,
       message: exception.message,
     });
   }
