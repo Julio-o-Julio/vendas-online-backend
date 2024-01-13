@@ -58,7 +58,7 @@ export class UserService {
         where: { email },
       });
     } catch (error) {
-      throw new EmailOrPasswordInvalidError('Email Or Password Invalid');
+      return undefined;
     }
   }
 

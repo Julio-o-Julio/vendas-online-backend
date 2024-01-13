@@ -17,7 +17,13 @@ export class AuthService {
   ) {}
 
   async signIn(signInDto: SignInDto): Promise<ReturnSignInDto> {
-    const user: User = await this.userService.findOneByEmail(signInDto.email);
+    const user: User | undefined = await this.userService.findOneByEmail(
+      signInDto.email,
+    );
+
+    if (!user) {
+      throw new EmailOrPasswordInvalidError('User Or Password Invalid');
+    }
 
     const isMatch = compareSync(signInDto.password, user.password);
 
