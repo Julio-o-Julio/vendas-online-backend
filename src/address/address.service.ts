@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { UserService } from 'src/user/user.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { UserService } from '../user/user.service';
 import { Address } from './entities/address.entity';
-import { CachedService } from 'src/cached/cached.service';
-import { NotFoundError } from 'src/errors/not-found.error';
+import { CachedService } from '../cached/cached.service';
+import { NotFoundError } from '../errors/not-found.error';
 
 @Injectable()
 export class AddressService {

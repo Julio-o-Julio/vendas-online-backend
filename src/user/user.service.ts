@@ -2,12 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { genSaltSync, hash } from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
-import { NotFoundError } from 'src/errors/not-found.error';
-import { CachedService } from 'src/cached/cached.service';
-import { EmailOrPasswordInvalidError } from 'src/errors/email-or-password-invalid.error';
+import { NotFoundError } from '../errors/not-found.error';
+import { CachedService } from '../cached/cached.service';
 
 @Injectable()
 export class UserService {

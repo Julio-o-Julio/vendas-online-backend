@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { SignInDto } from './dto/sign-in.dto';
-import { UserService } from 'src/user/user.service';
-import { User } from 'src/user/entities/user.entity';
+import { UserService } from '../user/user.service';
+import { User } from '../user/entities/user.entity';
 import { compareSync } from 'bcrypt';
-import { EmailOrPasswordInvalidError } from 'src/errors/email-or-password-invalid.error';
+import { EmailOrPasswordInvalidError } from '../errors/email-or-password-invalid.error';
 import { ReturnSignInDto } from './dto/return-sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
-import { ReturnUserDto } from 'src/user/dto/return-user.dto';
+import { ReturnUserDto } from '../user/dto/return-user.dto';
 import { PayloadSignInDto } from './dto/payload-sign-in.dto';
 
 @Injectable()

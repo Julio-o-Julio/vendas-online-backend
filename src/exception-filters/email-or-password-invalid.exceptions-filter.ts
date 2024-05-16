@@ -1,5 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
-import { EmailOrPasswordInvalidError } from 'src/errors/email-or-password-invalid.error';
+import { EmailOrPasswordInvalidError } from '../errors/email-or-password-invalid.error';
 
 @Catch(EmailOrPasswordInvalidError)
 export class EmailOrPasswordInvalidErrorExceptionFilter
